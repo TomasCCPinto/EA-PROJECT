@@ -1,7 +1,7 @@
 CC = g++
 FLAGS = -Wall -Wextra
 
-OBJ = A.o
+OBJ = main.o
 PROG = prog
 INPUT = input.txt
 
