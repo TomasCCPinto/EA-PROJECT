@@ -19,7 +19,7 @@ vector<int> qb(4);     // quadrant black cells
 vector<int> db(2);     // diagonal black cells 
 
 int valid_qr;
-
+int couting;
 
 
 void printQR(vector<vector<int>> &QR) {
@@ -42,6 +42,80 @@ void printQR(vector<vector<int>> &QR) {
         cout << "-";
     }
     cout << "+\n";
+}
+
+bool invalid(vector<vector<int>> QR){
+    /**
+        0 -> white
+        1 -> black
+    */
+    int N = 0;
+    int C = 0;
+    int Tx = 0;
+    int Tc = 0;
+    int D1 = 0; 
+    int D2 = 0;
+    int Q1, Q2, Q3, Q4;
+    Q1 = Q2 = Q3 = Q4 = 0;
+    int floor = QR.size() / 2;
+    floor--;
+
+    for (int i = 0; i < (int) QR.size(); ++i) {
+        for (int j = 0; j < (int) QR.size(); ++j) {
+            
+            if(i==j && QR[i][j]==1) D1++;
+            if((j== (int) QR.size() - 1 - i) && QR[i][j])  D2++;
+            if (QR[i][j] == 1) {
+                N++;
+            }
+            if (QR[j][i] == 1) {
+                C++;
+            }
+            if((j+1)<(int) QR.size() && QR[i][j] != QR[i][j+1]){
+                Tx++;
+            }
+            if((j+1)<(int) QR.size() && QR[j][i] != QR[j+1][i]){
+                Tc++;
+            }
+            if (i <= floor && j >  floor && QR[i][j]) Q1++;
+            if (i <= floor && j <= floor && QR[i][j]) Q2++;
+            if (i >  floor && j <= floor && QR[i][j]) Q3++;
+            if (i >  floor && j >  floor && QR[i][j]) Q4++;
+        }
+
+
+        if (N > lb[i]) {
+            return false;
+        } else if (C > cb[i]) {
+            return false;
+        } /*else if (Tx > lt[i]) {
+            cout << "line, " << lt[i] << " :" << Tx << endl;
+            printQR(QR);
+            return false;
+        } else if (Tc > ct[i]) {
+            cout << "col, " << ct[i] << " :" << Tc << endl;
+            printQR(QR);
+            return false;
+        }*/
+        C = 0;
+        N = 0;
+        Tx = 0;
+        Tc = 0;
+    }
+    if (Q1 > qb[0])
+        return false;
+    else if (Q2 > qb[1])
+        return false;
+    else if (Q3 > qb[2])
+        return false;
+    else if (Q4 > qb[3])
+        return false;
+    else if (D1 > db[0])
+        return false;
+    else if (D2 > db[1])
+        return false;
+
+    return true;
 }
 
 bool validation(vector<vector<int>> QR){
@@ -121,6 +195,12 @@ void recursion(vector<vector<int>> QR, int i, int j) {
         i -> lines
         j -> columns
     */
+
+    couting++;
+    if (!invalid(QR)) {
+        return;
+    }
+
     if (i == (int) QR.size()) {
         if (validation(QR)) {
             valid_qr++;
@@ -171,7 +251,7 @@ void solve() {
         cout << "VALID: 1 QR Code generated!\n";
         printQR(cp);
     } else if (valid_qr == 0) {
-        cout << "DEFECT: No QR Code generated!\n" ;
+        cout << "DEFECT: No QR Code generated!\n";
     } else {
         cout << "INVALID: " << valid_qr << " QR Codes generated!\n";
     }
@@ -182,9 +262,13 @@ int main() {
     int t;
     cin >> t;
 
+    couting = 0;
+
     while (t--) {
 	    solve();
     }
+
+    cout << couting << endl;
 
     return 0;
 }

@@ -1,0 +1,12 @@
+g++    -c -o main.o main.cpp
+g++ -Wall -Wextra main.o -o prog
+./prog < input.txt
+VALID: 1 QR Code generated!
++---+
+|#  |
+|   |
+|  #|
++---+
+INVALID: 2 QR Codes generated!
+DEFECT: No QR Code generated!
+74021
