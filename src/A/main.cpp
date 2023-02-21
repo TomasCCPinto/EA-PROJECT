@@ -44,19 +44,17 @@ void printQR(vector<vector<int>> &QR) {
     cout << "+\n";
 }
 
-bool invalid(vector<vector<int>> QR){
+bool invalid(vector<vector<int>> QR, int x, int y){
     /**
         0 -> white
         1 -> black
     */
-    int N = 0;
-    int C = 0;
-    int Tx = 0;
-    int Tc = 0;
-    int D1 = 0; 
-    int D2 = 0;
+    int N, C, Tx, Tc, D1, D2;
+    N = C = Tx = Tc = D1 = D2 = 0;
+
     int Q1, Q2, Q3, Q4;
     Q1 = Q2 = Q3 = Q4 = 0;
+
     int floor = QR.size() / 2;
     floor--;
 
@@ -71,10 +69,10 @@ bool invalid(vector<vector<int>> QR){
             if (QR[j][i] == 1) {
                 C++;
             }
-            if((j+1)<(int) QR.size() && QR[i][j] != QR[i][j+1]){
+            if((j+1) < y && QR[i][j] != QR[i][j+1]){
                 Tx++;
             }
-            if((j+1)<(int) QR.size() && QR[j][i] != QR[j+1][i]){
+            if((j+1) < x && QR[j][i] != QR[j+1][i]){
                 Tc++;
             }
             if (i <= floor && j >  floor && QR[i][j]) Q1++;
@@ -88,19 +86,12 @@ bool invalid(vector<vector<int>> QR){
             return false;
         } else if (C > cb[i]) {
             return false;
-        } /*else if (Tx > lt[i]) {
-            cout << "line, " << lt[i] << " :" << Tx << endl;
-            printQR(QR);
+        } else if (Tx > lt[i]) {
             return false;
         } else if (Tc > ct[i]) {
-            cout << "col, " << ct[i] << " :" << Tc << endl;
-            printQR(QR);
             return false;
-        }*/
-        C = 0;
-        N = 0;
-        Tx = 0;
-        Tc = 0;
+        }
+        C = N = Tx = Tc =  0;
     }
     if (Q1 > qb[0])
         return false;
@@ -123,18 +114,14 @@ bool validation(vector<vector<int>> QR){
         0 -> white
         1 -> black
     */
+    int N, C, Tx, Tc, D1, D2;
+    N = C = Tx = Tc = D1 = D2 = 0;
 
-    int N = 0;
-    int C = 0;
-    int Tx = 0;
-    int Tc = 0;
-    int D1 = 0; 
-    int D2 = 0;
     int Q1, Q2, Q3, Q4;
     Q1 = Q2 = Q3 = Q4 = 0;
+
     int floor = QR.size() / 2;
     floor--;
-
 
     for (int i = 0; i < (int) QR.size(); ++i) {
         for (int j = 0; j < (int) QR.size(); ++j) {
@@ -197,7 +184,7 @@ void recursion(vector<vector<int>> QR, int i, int j) {
     */
 
     couting++;
-    if (!invalid(QR)) {
+    if (!invalid(QR, i, j)) {
         return;
     }
 
