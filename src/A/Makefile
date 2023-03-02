@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -O2
 
 OBJ = main.o
 PROG = prog
@@ -14,7 +14,7 @@ comp:	${OBJ}
 	${CC} ${FLAGS} ${OBJ} -o ${PROG}
 	./${PROG} < ${INPUT}
 
-clean:	${OBJ}
+clean:	
 	rm ${OBJ} ${PROG}
 
 

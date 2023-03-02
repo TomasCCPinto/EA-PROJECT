@@ -19,7 +19,7 @@ vector<int> qb(4);     // quadrant black cells
 vector<int> db(2);     // diagonal black cells 
 
 int valid_qr;
-int couting;
+int chao;
 
 
 void printQR(vector<vector<int>> &QR) {
@@ -44,165 +44,107 @@ void printQR(vector<vector<int>> &QR) {
     cout << "+\n";
 }
 
-bool invalid(vector<vector<int>> QR, int x, int y){
-    /**
-        0 -> white
-        1 -> black
-    */
-    int N, C, Tx, Tc, D1, D2;
-    N = C = Tx = Tc = D1 = D2 = 0;
-
-    int Q1, Q2, Q3, Q4;
-    Q1 = Q2 = Q3 = Q4 = 0;
-
-    int floor = QR.size() / 2;
-    floor--;
-
-    for (int i = 0; i < (int) QR.size(); ++i) {
-        for (int j = 0; j < (int) QR.size(); ++j) {
-            
-            if(i==j && QR[i][j]==1) D1++;
-            if((j== (int) QR.size() - 1 - i) && QR[i][j])  D2++;
-            if (QR[i][j] == 1) {
-                N++;
-            }
-            if (QR[j][i] == 1) {
-                C++;
-            }
-            if((j+1) < y && QR[i][j] != QR[i][j+1]){
-                Tx++;
-            }
-            if((j+1) < x && QR[j][i] != QR[j+1][i]){
-                Tc++;
-            }
-            if (i <= floor && j >  floor && QR[i][j]) Q1++;
-            if (i <= floor && j <= floor && QR[i][j]) Q2++;
-            if (i >  floor && j <= floor && QR[i][j]) Q3++;
-            if (i >  floor && j >  floor && QR[i][j]) Q4++;
-        }
-
-
-        if (N > lb[i]) {
-            return false;
-        } else if (C > cb[i]) {
-            return false;
-        } else if (Tx > lt[i]) {
-            return false;
-        } else if (Tc > ct[i]) {
-            return false;
-        }
-        C = N = Tx = Tc =  0;
-    }
-    if (Q1 > qb[0])
-        return false;
-    else if (Q2 > qb[1])
-        return false;
-    else if (Q3 > qb[2])
-        return false;
-    else if (Q4 > qb[3])
-        return false;
-    else if (D1 > db[0])
-        return false;
-    else if (D2 > db[1])
-        return false;
-
-    return true;
-}
-
 bool validation(vector<vector<int>> QR){
-    /**
-        0 -> white
-        1 -> black
-    */
     int N, C, Tx, Tc, D1, D2;
     N = C = Tx = Tc = D1 = D2 = 0;
 
     int Q1, Q2, Q3, Q4;
     Q1 = Q2 = Q3 = Q4 = 0;
 
-    int floor = QR.size() / 2;
-    floor--;
-
     for (int i = 0; i < (int) QR.size(); ++i) {
         for (int j = 0; j < (int) QR.size(); ++j) {
             
             if(i==j && QR[i][j]==1) D1++;
             if((j== (int) QR.size() - 1 - i) && QR[i][j])  D2++;
-            if (QR[i][j] == 1) {
-                N++;
-            }
-            if (QR[j][i] == 1) {
-                C++;
-            }
             if((j+1)<(int) QR.size() && QR[i][j] != QR[i][j+1]){
                 Tx++;
             }
             if((j+1)<(int) QR.size() && QR[j][i] != QR[j+1][i]){
                 Tc++;
             }
-            if (i <= floor && j >  floor && QR[i][j]) Q1++;
-            if (i <= floor && j <= floor && QR[i][j]) Q2++;
-            if (i >  floor && j <= floor && QR[i][j]) Q3++;
-            if (i >  floor && j >  floor && QR[i][j]) Q4++;
         }
-
-
-        if (N != lb[i]) {
-            return false;
-        } else if (C != cb[i]) {
-            return false;
-        } else if (Tx != lt[i]) {
+        if (Tx != lt[i]) {
             return false;
         } else if (Tc != ct[i]) {
             return false;
         }
-        C = 0;
-        N = 0;
         Tx = 0;
         Tc = 0;
     }
-    if (Q1 != qb[0])
-        return false;
-    else if (Q2 != qb[1])
-        return false;
-    else if (Q3 != qb[2])
-        return false;
-    else if (Q4 != qb[3])
-        return false;
-    else if (D1 != db[0])
-        return false;
-    else if (D2 != db[1])
-        return false;
 
     return true;
 }
 
-void recursion(vector<vector<int>> QR, int i, int j) {
-    /**
-        i -> lines
-        j -> columns
-    */
 
-    couting++;
-    if (!invalid(QR, i, j)) {
+
+void recursion(vector<vector<int>> QR, int i, int j) {
+
+    if (lb[i] < 0 || cb[i] < 0)
         return;
-    }
+    if (qb[0] < 0 || qb[1] < 0 || qb[2] < 0 || qb[3] < 0)
+        return;
+    if (db[0] < 0 || db[1] < 0)
+        return;
+    // if (ct[j] < 0 || lt[i] < 0)
+    //     return;
 
     if (i == (int) QR.size()) {
-        if (validation(QR)) {
+        // if (!accumulate(ct.begin(), ct.end(), 0) && !accumulate(lt.begin(), lt.end(),0) && !db[0] && !db[1]) {
+        //     valid_qr++;
+        //     cp = QR;
+        // }
+        if (validation(QR) && !db[0] && !db[1]) {
             valid_qr++;
             cp = QR;
         }
         return;
     }
     if (j == (int) QR.size()) {
+        if (lb[i] != 0)
+            return;
         recursion(QR, i+1, 0);
         return;
     }
-    
+    if (!lb[i] && !cb[j]) {
+        recursion(QR, i, j+1);
+        return;
+    }
+
     recursion(QR, i, j+1);
+    lb[i]--;
+    cb[j]--;
     QR[i][j] = 1;
+    if (i <= chao && j >  chao) qb[0]--;
+    else if (i <= chao && j <= chao) qb[1]--;
+    else if (i >  chao && j <= chao) qb[2]--;
+    else if (i >  chao && j >  chao) qb[3]--;
+
+    if(i == j) db[0]--;
+    if((j == (int) QR.size() - 1 - i))  db[1]--;
+
+    // if(j > 0 && !QR[i][j-1]) lt[i]--;
+    // if(i > 0 && !QR[i-1][j]) ct[j]--;
+
     recursion(QR, i, j+1);
+
+    // if(j > 0 && !QR[i][j-1]) lt[i]++;
+    // if(i > 0 && !QR[i-1][j]) ct[j]++;
+
+    QR[i][j] = 0;
+
+    // if(j > 0 && QR[i][j-1]) lt[i]--;
+    // if(i > 0 && QR[i-1][j]) ct[j]--;
+
+    lb[i]++;
+    cb[j]++;
+    if (i <= chao && j >  chao) qb[0]++;
+    else if (i <= chao && j <= chao) qb[1]++;
+    else if (i >  chao && j <= chao) qb[2]++;
+    else if (i >  chao && j >  chao) qb[3]++;
+    
+    if(i == j ) db[0]++;
+    if(j == (int) QR.size() - 1 - i)  db[1]++;
+
 }
 
 
@@ -231,6 +173,8 @@ void solve() {
 
     // solve
     vector<vector<int>> QR(n, vector<int>(n, 0));
+    chao = n / 2;
+    chao--;
 
     recursion(QR, 0, 0);
 
@@ -249,13 +193,10 @@ int main() {
     int t;
     cin >> t;
 
-    couting = 0;
 
     while (t--) {
 	    solve();
     }
-
-    cout << couting << endl;
 
     return 0;
 }
