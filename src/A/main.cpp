@@ -10,7 +10,6 @@ using namespace std;
 
 vector<vector<int>> cp;
 
-
 vector<int> lb(31);    // black line cells
 vector<int> cb(31);    // black column cells
 vector<int> lt(31);    // line transitions
@@ -88,27 +87,57 @@ void recursion(vector<vector<int>> QR, int i, int j) {
     // if (ct[j] < 0 || lt[i] < 0)
     //     return;
 
+    // cout << i << " " << j <<" " <<QR.size() << endl;
     if (i == (int) QR.size()) {
         // if (!accumulate(ct.begin(), ct.end(), 0) && !accumulate(lt.begin(), lt.end(),0) && !db[0] && !db[1]) {
         //     valid_qr++;
         //     cp = QR;
         // }
+
+
+
         if (validation(QR) && !db[0] && !db[1]) {
             valid_qr++;
             cp = QR;
         }
         return;
     }
+
     if (j == (int) QR.size()) {
         if (lb[i] != 0)
             return;
         recursion(QR, i+1, 0);
         return;
     }
-    if (!lb[i] && !cb[j]) {
+
+    
+    //if (!lb[i] && !cb[j]) {
+    //    recursion(QR, i, j+1);
+    //    return;
+    //}
+    
+
+    //nao ha mais pretos -> tudo a branco
+    if(!lb[i]){
+        recursion(QR, i+1, 0);
+        return;
+    }
+    else if (!cb[j]) {
         recursion(QR, i, j+1);
         return;
     }
+
+
+    /*
+    if(lb[i]== QR.size()){
+        for (int x = j; x < QR.size(); x++)
+        {
+            QR[i][x]=1;
+        }
+        recursion(QR, i+1, 0);
+        return;
+    }
+    */
 
     recursion(QR, i, j+1);
     lb[i]--;
@@ -154,6 +183,7 @@ void solve() {
     // input 
     int n;
     cin >> n;
+    vector<vector<int>> QR(n, vector<int>(n, 0));
 
     for (int i = 0; i < n; ++i) {
         cin >> lb[i];
@@ -170,13 +200,49 @@ void solve() {
     cin >> qb[0] >> qb[1] >> qb[2] >> qb[3];
     cin >> db[0] >> db[1];
 
+    
+    //cout << "ehre\n";
 
-    // solve
-    vector<vector<int>> QR(n, vector<int>(n, 0));
     chao = n / 2;
     chao--;
 
+    for (int i = 0; i < n; ++i) {
+        if(lb[i] == n){
+            for (int x = 0; x < n; x++) {
+                QR[i][x] = 1;
+                cb[x]--;
+            }
+            lb[i] = 0;
+            db[0]--;
+            db[1]--;
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        if(cb[i] == n){
+            int t = 0;
+            for (int x = 0; x < n; x++) {
+                QR[x][i] = 1;
+                lb[x]--;
+            }
+            cb[i] = 0;
+            db[0]--;
+            db[1]--;
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (i <= chao && j >  chao && QR[i][j]) qb[0]--;
+            if (i <= chao && j <= chao && QR[i][j]) qb[1]--;
+            if (i >  chao && j <= chao && QR[i][j]) qb[2]--;
+            if (i >  chao && j >  chao && QR[i][j]) qb[3]--;
+        }
+    }
+
+
+
+    //printQR(QR)
     recursion(QR, 0, 0);
+    
 
     if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
@@ -186,6 +252,7 @@ void solve() {
     } else {
         cout << "INVALID: " << valid_qr << " QR Codes generated!\n";
     }
+
 }
 
 
