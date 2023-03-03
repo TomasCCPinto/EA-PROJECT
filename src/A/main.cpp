@@ -7,6 +7,7 @@
 
 using namespace std;
 
+int conta;
 
 vector<vector<int>> cp;
 
@@ -43,7 +44,7 @@ void printQR(vector<vector<int>> &QR) {
     cout << "+\n";
 }
 
-bool validation(vector<vector<int>> QR){
+bool validation(vector<vector<int>> &QR){
     int N, C, Tx, Tc, D1, D2;
     N = C = Tx = Tc = D1 = D2 = 0;
 
@@ -76,7 +77,8 @@ bool validation(vector<vector<int>> QR){
 
 
 
-void recursion(vector<vector<int>> QR, int i, int j) {
+void recursion(vector<vector<int>> &QR, int i, int j) {
+    conta++;
 
     if (lb[i] < 0 || cb[i] < 0)
         return;
@@ -93,8 +95,6 @@ void recursion(vector<vector<int>> QR, int i, int j) {
         //     valid_qr++;
         //     cp = QR;
         // }
-
-
 
         if (validation(QR) && !db[0] && !db[1]) {
             valid_qr++;
@@ -116,6 +116,31 @@ void recursion(vector<vector<int>> QR, int i, int j) {
     //    return;
     //}
     
+
+    //Q1 E Q2 DONE 
+    if (i <= chao && !qb[1] && !qb[0]){
+        recursion(QR, chao+1, 0);
+        return;
+    }
+
+    //Q2 DONE
+    if (i <= chao && j <= chao && !qb[1]){
+        recursion(QR, i, chao+1);
+        return;
+    } 
+
+    //Q3 E Q4 DONE
+    if (i > chao && !qb[2] && !qb[3]){
+        recursion(QR, (int) QR.size(), 0);
+        return;
+    }
+
+    //Q3 DONE
+    if (i > chao && j <= chao && !qb[2]){
+        recursion(QR, i, chao+1);
+        return;
+    } 
+
 
     //nao ha mais pretos -> tudo a branco
     if(!lb[i]){
@@ -203,6 +228,19 @@ void solve() {
     
     //cout << "ehre\n";
 
+    for (int i = 0; i < n; ++i) {
+        int v=0;
+        if((cb[i] != n) && (cb[i] != 0) && (ct[i] == 0)) v=1;
+        if((lb[i] != n) && (lb[i] != 0) && (lt[i] == 0)) v=1;
+        if((lt[i]==n) || (ct[i]==n)) v=1;
+
+        if(v){
+            cout << "DEFECT: No QR Code generated!\n";
+            return;
+        }
+    }
+
+
     chao = n / 2;
     chao--;
 
@@ -260,10 +298,11 @@ int main() {
     int t;
     cin >> t;
 
-
+    conta=0;
     while (t--) {
 	    solve();
     }
+    cout << conta << endl;
 
     return 0;
 }
