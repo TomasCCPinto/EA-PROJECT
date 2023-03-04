@@ -20,6 +20,8 @@ vector<int> db(2);     // diagonal black cells
 int valid_qr;
 int chao;
 
+int ccc = 0;
+
 
 void printQR(vector<vector<int>> &QR) {
     cout << "+";
@@ -43,7 +45,7 @@ void printQR(vector<vector<int>> &QR) {
     cout << "+\n";
 }
 
-bool validation(vector<vector<int>> QR){
+bool validation(vector<vector<int>> &QR){
     int N, C, Tx, Tc, D1, D2;
     N = C = Tx = Tc = D1 = D2 = 0;
 
@@ -76,14 +78,18 @@ bool validation(vector<vector<int>> QR){
 
 
 
-void recursion(vector<vector<int>> QR, int i, int j) {
-
-    if (lb[i] < 0 || cb[i] < 0)
+void recursion(vector<vector<int>> &QR, int i, int j) {
+  ccc++;
+    if (lb[i] < 0 || cb[j] < 0)
         return;
     if (qb[0] < 0 || qb[1] < 0 || qb[2] < 0 || qb[3] < 0)
         return;
     if (db[0] < 0 || db[1] < 0)
         return;
+    if (j != 0 && cb[j-1] < 0)
+        return;
+
+
     // if (ct[j] < 0 || lt[i] < 0)
     //     return;
 
@@ -149,7 +155,7 @@ void recursion(vector<vector<int>> QR, int i, int j) {
     else if (i >  chao && j >  chao) qb[3]--;
 
     if(i == j) db[0]--;
-    if((j == (int) QR.size() - 1 - i))  db[1]--;
+    if(j == (int) QR.size() - 1 - i)  db[1]--;
 
     // if(j > 0 && !QR[i][j-1]) lt[i]--;
     // if(i > 0 && !QR[i-1][j]) ct[j]--;
@@ -185,6 +191,7 @@ void solve() {
     cin >> n;
     vector<vector<int>> QR(n, vector<int>(n, 0));
 
+    bool flag = false;
     for (int i = 0; i < n; ++i) {
         cin >> lb[i];
     }
@@ -193,18 +200,41 @@ void solve() {
     }
     for (int i = 0; i < n; ++i) {
         cin >> lt[i];
+	    if (lt[i] == n)
+	      flag = true;
     }
     for (int i = 0; i < n; ++i) {
         cin >> ct[i];
+	    if (ct[i] == n)
+	      flag = true;
     }
     cin >> qb[0] >> qb[1] >> qb[2] >> qb[3];
     cin >> db[0] >> db[1];
 
-    
-    //cout << "ehre\n";
-
     chao = n / 2;
     chao--;
+
+    // int q1, q2, q3, q4;
+    // if (n%2 == 0) {
+    //   q1 = q2 = q3 = q4 = n/2;
+    //   cout << "1" << q1 << q2 << q3 << q4 << endl;
+    // } else {
+    //   q1 = pow(n/2 + 1, 2);
+    //   q2 = pow(n/2, 2);
+    //   q3 = pow(n/2 + 1, 2);
+    //   q4 = pow(n/2, 2);
+    //   cout << "2" << q1 << q2 << q3 << q4 << endl;
+    // }
+    // if (qb[0] >= q1) {
+    //   flag = true;
+    // } else if (qb[1] >= q2) {
+    //   flag = true;
+    // } else if (qb[2] >= q3) {
+    //   flag = true;
+    // } else if (qb[3] >= q4) {
+    //   flag = true;
+    // }
+      
 
     for (int i = 0; i < n; ++i) {
         if(lb[i] == n){
@@ -238,21 +268,20 @@ void solve() {
         }
     }
 
-
-
     //printQR(QR)
-    recursion(QR, 0, 0);
-    
-
-    if (valid_qr == 1) {
+    if (flag) {
+        cout << "INVALID: " << valid_qr << " QR Codes generated!\n";
+    } else {
+      recursion(QR, 0, 0);
+      if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
         printQR(cp);
-    } else if (valid_qr == 0) {
+      } else if (valid_qr == 0) {
         cout << "DEFECT: No QR Code generated!\n";
-    } else {
+      } else {
         cout << "INVALID: " << valid_qr << " QR Codes generated!\n";
+      }
     }
-
 }
 
 
@@ -264,6 +293,8 @@ int main() {
     while (t--) {
 	    solve();
     }
+
+    cout << ccc << endl;
 
     return 0;
 }
