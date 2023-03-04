@@ -78,6 +78,7 @@ bool validation(vector<vector<int>> &QR){
 
 
 void recursion(vector<vector<int>> &QR, int i, int j) {
+
     conta++;
 
     if (lb[i] < 0 || cb[i] < 0)
@@ -86,16 +87,9 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     if (db[0] < 0 || db[1] < 0)
         return;
-    // if (ct[j] < 0 || lt[i] < 0)
-    //     return;
-
-    // cout << i << " " << j <<" " <<QR.size() << endl;
+    
     if (i == (int) QR.size()) {
-        // if (!accumulate(ct.begin(), ct.end(), 0) && !accumulate(lt.begin(), lt.end(),0) && !db[0] && !db[1]) {
-        //     valid_qr++;
-        //     cp = QR;
-        // }
-
+        
         if (validation(QR) && !db[0] && !db[1]) {
             valid_qr++;
             cp = QR;
@@ -110,12 +104,41 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     }
 
-    
-    //if (!lb[i] && !cb[j]) {
-    //    recursion(QR, i, j+1);
-    //    return;
-    //}
-    
+
+    if(lb[i] == (int) QR.size() - j){
+        
+        for (int x = j; x < (int) QR.size(); x++)
+        {
+            QR[i][x] = 1;
+            lb[i]--;
+            cb[x]--;
+            if (i <= chao && x >  chao) qb[0]--;
+            else if (i <= chao && x <= chao) qb[1]--;
+            else if (i >  chao && x <= chao) qb[2]--;
+            else if (i >  chao && x >  chao) qb[3]--;
+
+            if(i == x) db[0]--;
+            if((x == (int) QR.size() - 1 - i))  db[1]--;
+        }
+        recursion(QR, i+1, 0);
+
+        for (int x = j; x < (int) QR.size(); x++)
+        {
+            QR[i][x] = 0;
+            lb[i]++;
+            cb[x]++;
+            if (i <= chao && x >  chao) qb[0]++;
+            else if (i <= chao && x <= chao) qb[1]++;
+            else if (i >  chao && x <= chao) qb[2]++;
+            else if (i >  chao && x >  chao) qb[3]++;
+
+            if(i == x) db[0]++;
+            if((x == (int) QR.size() - 1 - i))  db[1]++;
+        }
+
+        return;
+        
+    }
 
     //Q1 E Q2 DONE 
     if (i <= chao && !qb[1] && !qb[0]){
@@ -140,9 +163,7 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         recursion(QR, i, chao+1);
         return;
     } 
-
-
-    //nao ha mais pretos -> tudo a branco
+  
     if(!lb[i]){
         recursion(QR, i+1, 0);
         return;
@@ -151,18 +172,6 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         recursion(QR, i, j+1);
         return;
     }
-
-
-    /*
-    if(lb[i]== QR.size()){
-        for (int x = j; x < QR.size(); x++)
-        {
-            QR[i][x]=1;
-        }
-        recursion(QR, i+1, 0);
-        return;
-    }
-    */
 
     recursion(QR, i, j+1);
     lb[i]--;
@@ -176,18 +185,9 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     if(i == j) db[0]--;
     if((j == (int) QR.size() - 1 - i))  db[1]--;
 
-    // if(j > 0 && !QR[i][j-1]) lt[i]--;
-    // if(i > 0 && !QR[i-1][j]) ct[j]--;
-
     recursion(QR, i, j+1);
 
-    // if(j > 0 && !QR[i][j-1]) lt[i]++;
-    // if(i > 0 && !QR[i-1][j]) ct[j]++;
-
     QR[i][j] = 0;
-
-    // if(j > 0 && QR[i][j-1]) lt[i]--;
-    // if(i > 0 && QR[i-1][j]) ct[j]--;
 
     lb[i]++;
     cb[j]++;
@@ -225,8 +225,6 @@ void solve() {
     cin >> qb[0] >> qb[1] >> qb[2] >> qb[3];
     cin >> db[0] >> db[1];
 
-    
-    //cout << "ehre\n";
 
     for (int i = 0; i < n; ++i) {
         int v=0;
@@ -276,9 +274,6 @@ void solve() {
         }
     }
 
-
-
-    //printQR(QR)
     recursion(QR, 0, 0);
     
 
