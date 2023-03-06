@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// int conta;
 
 vector<vector<int>> cp;
 
@@ -44,6 +43,7 @@ void printQR(vector<vector<int>> &QR) {
     cout << "+\n";
 }
 
+
 bool validation(vector<vector<int>> &QR){
     int N, C, Tx, Tc, D1, D2;
     N = C = Tx = Tc = D1 = D2 = 0;
@@ -76,7 +76,6 @@ bool validation(vector<vector<int>> &QR){
 }
 
 
-
 void recursion(vector<vector<int>> &QR, int i, int j) {
     if (lb[i] < 0 || cb[j] < 0)
         return;
@@ -102,7 +101,21 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     }
 
-    // this is isn't working
+    if(j>0){
+        int contatx=0;
+        for (int x = 1; x < j; x++){
+            if(QR[i][x] != QR[i][x-1]) contatx++; 
+        }
+        if(contatx>lt[i]) return;
+    }
+    if(i>0){
+        int contatc=0;
+        for (int x = 1; x < i; x++){
+            if(QR[x][j] != QR[x-1][j]) contatc++; 
+        }
+        if(contatc>ct[j]) return;
+    }
+    
     if(lb[i] == (int) QR.size() - j){
         bool v = false;
         for (int x = j; x < (int) QR.size(); x++) {
@@ -314,10 +327,12 @@ void solve() {
 int main() {
     int t;
     cin >> t;
-
+    
+    //conta=0;
     while (t--) {
 	    solve();
     }
+    //cout << conta << endl;
 
     return 0;
 }
