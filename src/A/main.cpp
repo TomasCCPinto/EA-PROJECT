@@ -8,6 +8,8 @@
 using namespace std;
 
 
+int conta;
+
 vector<vector<int>> cp;
 
 vector<int> lb(31);    // black line cells
@@ -77,6 +79,9 @@ bool validation(vector<vector<int>> &QR){
 
 
 void recursion(vector<vector<int>> &QR, int i, int j) {
+
+    conta++;
+
     if (lb[i] < 0 || cb[j] < 0)
         return;
     if (qb[0] < 0 || qb[1] < 0 || qb[2] < 0 || qb[3] < 0)
@@ -93,7 +98,6 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         }
         return;
     }
-
     if (j == (int) QR.size()) {
         if (lb[i] != 0)
             return;
@@ -181,6 +185,11 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     else if (!cb[j]) {
         recursion(QR, i, j+1);
         return;
+    }
+
+    if(QR[i][j]){
+        recursion(QR, i, j+1);
+        return;    
     }
 
     recursion(QR, i, j+1);
@@ -284,31 +293,41 @@ void solve() {
         if(lb[i] == n){
             for (int x = 0; x < n; x++) {
                 QR[i][x] = 1;
-                cb[x]--;
             }
-            lb[i] = 0;
-            db[0]--;
-            db[1]--;
         }
     }
     for (int i = 0; i < n; ++i) {
         if(cb[i] == n){
-            int t = 0;
             for (int x = 0; x < n; x++) {
                 QR[x][i] = 1;
-                lb[x]--;
             }
-            cb[i] = 0;
-            db[0]--;
-            db[1]--;
         }
     }
+
+    if(db[0] == n){
+        for (int x = 0; x < n; x++) {
+            QR[x][x] = 1;
+        }
+    }
+    if(db[1] == n){
+        for (int x = 0; x < n; x++) {
+            QR[x][n-1-x] = 1;
+        }
+    }
+    
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
+            if(QR[i][j]){
+                lb[i]--;
+                cb[j]--;
+            }
             if (i <= chao && j >  chao && QR[i][j]) qb[0]--;
             if (i <= chao && j <= chao && QR[i][j]) qb[1]--;
             if (i >  chao && j <= chao && QR[i][j]) qb[2]--;
             if (i >  chao && j >  chao && QR[i][j]) qb[3]--;
+
+            if(i == j && QR[i][j]) db[0]--;
+            if((j == (int) QR.size() - 1 - i)  && QR[i][j])  db[1]--;
         }
     }
 
@@ -328,11 +347,11 @@ int main() {
     int t;
     cin >> t;
     
-    //conta=0;
+    conta=0;
     while (t--) {
 	    solve();
     }
-    //cout << conta << endl;
+    cout << conta << endl;
 
     return 0;
 }
