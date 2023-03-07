@@ -8,7 +8,7 @@
 using namespace std;
 
 
-int conta;
+// int conta;
 
 vector<vector<int>> cp;
 
@@ -80,7 +80,7 @@ bool validation(vector<vector<int>> &QR){
 
 void recursion(vector<vector<int>> &QR, int i, int j) {
 
-    conta++;
+    //conta++;
 
     if (lb[i] < 0 || cb[j] < 0)
         return;
@@ -314,6 +314,41 @@ void solve() {
             QR[x][n-1-x] = 1;
         }
     }
+
+    
+    //int q1, q2;
+    //if (n%2 == 0) {
+    //    q1 = q2 = n/2;
+    //} else {
+    //    q1 = n/2;
+    //    q2 = n/2 + 1;
+    //} if (qb[0] == q1*q2) {
+    //    //cout << "here0\n";
+    //    for (int i = 0; i < q1; ++i) {
+    //        for (int j = 0; j < q2; ++j)
+    //            QR[i][q1 + j] = 1;
+    //    }
+    //} if (qb[1] == q1*q1) {
+    //    //cout << "here1\n";
+    //    for (int i = 0; i < q1; ++i) {
+    //        for (int j = 0; j < q1; ++j)
+    //            QR[i][j] = 1;
+    //    }
+    //} if (qb[2] == q1*q2) {
+    //    //cout << "here2\n";
+    //    for (int i = 0; i < q2; ++i) {
+    //        for (int j = 0; j < q1; ++j)
+    //            QR[q1 + i][j] = 1;
+    //    }
+    //} if (qb[3] == q2*q2) {
+    //    //cout << "here3\n";
+    //    for (int i = 0; i < q2; ++i) {
+    //        for (int j = 0; j < q2; ++j)
+    //            QR[q1 + i][q1 + j] = 1;
+    //    }
+    //}
+    
+
     
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -331,6 +366,7 @@ void solve() {
         }
     }
 
+
     recursion(QR, 0, 0);
     if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
@@ -347,11 +383,11 @@ int main() {
     int t;
     cin >> t;
     
-    conta=0;
+    //conta=0;
     while (t--) {
 	    solve();
     }
-    cout << conta << endl;
+    //cout << conta << endl;
 
     return 0;
 }
