@@ -154,6 +154,8 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
 
     //Q1 E Q2 DONE 
     if (i <= chao && !qb[1] && !qb[0]){
+        if(lb[i])
+            return;
         recursion(QR, chao+1, 0);
         return;
     }
@@ -164,13 +166,20 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     }
 
     ////Q1 DONE
-    //if (i <= chao && j > chao && !qb[0]){
-    //    recursion(QR, i+1, 0);
-    //    return;
-    //} 
+    if (i <= chao && j > chao && !qb[0]){
+        
+        if(lb[i])
+            return;
+        recursion(QR, i+1, 0);
+        return;
+    } 
 
     //Q3 E Q4 DONE
     if (i > chao && !qb[2] && !qb[3]){
+        if(lb[i])
+            return;
+        if(cb[j])
+            return;
         recursion(QR, (int) QR.size(), 0);
         return;
     }
@@ -181,10 +190,14 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     }
 
     ////Q4 DONE
-    //if (i > chao && j > chao && !qb[3]){
-    //    recursion(QR, i+1, 0);
-    //    return;
-    //} 
+    if (i > chao && j > chao && !qb[3]){
+        if(lb[i])
+            return;
+        if(i== (int) QR.size()-1 && cb[j])
+            return;
+        recursion(QR, i+1, 0);
+        return;
+    } 
 
     if(!lb[i]){
         recursion(QR, i+1, 0);
@@ -285,9 +298,15 @@ void solve() {
             return;
         }
     }
+
+    
     
     for (int i = 0; i < n; ++i) {
         if(lb[i] < coln){
+            cout << "DEFECT: No QR Code generated!\n";
+            return;
+        }
+        else if(lb[i] > (n-col0)){
             cout << "DEFECT: No QR Code generated!\n";
             return;
         }
@@ -295,7 +314,13 @@ void solve() {
             cout << "DEFECT: No QR Code generated!\n";
             return;
         }
+        else if(cb[i] > (n-lin0)){
+            cout << "DEFECT: No QR Code generated!\n";
+            return;
+        }
     }
+
+    
 
     if(nlin != ncol){ 
         cout << "DEFECT: No QR Code generated!\n";
@@ -351,39 +376,118 @@ void solve() {
         }
     }
 
+
+    //DIAGONAIS
+    if(n%2==0 ){
+        if(db[0]==n && db[1]==n){
+            for (int i = 0; i < n; ++i) {
+                if(lb[i]<2 || cb[i]<2){
+                    cout << "DEFECT: No QR Code generated!\n";
+                    return;
+                }
+            }
+        } else if(db[0]==n || db[1] ==n){
+            for (int i = 0; i < n; ++i) {
+                if(lb[i]<1 || cb[i]<1){
+                    cout << "DEFECT: No QR Code generated!\n";
+                    return;
+                }
+            }
+        }
+    } else{
+        if(db[0]==n && db[1]==n){
+            for (int i = 0; i < n; ++i) {
+                if(i != n/2){
+                    if(lb[i]<2 || cb[i]<2){
+                        cout << "DEFECT: No QR Code generated!\n";
+                        return;
+                    }
+                }
+                else{
+                    if(lb[i]<1 || cb[i]<1){
+                        cout << "DEFECT: No QR Code generated!\n";
+                        return;
+                    }
+                }
+            }
+        } else if(db[0]==n || db[1] ==n){
+            for (int i = 0; i < n; ++i) {
+                if(lb[i]<1 || cb[i]<1){
+                    cout << "DEFECT: No QR Code generated!\n";
+                    return;
+                }
+            }
+        }
+    }
     
-    //int q1, q2;
-    //if (n%2 == 0) {
-    //    q1 = q2 = n/2;
-    //} else {
-    //    q1 = n/2;
-    //    q2 = n/2 + 1;
-    //} if (qb[0] == q1*q2) {
-    //    //cout << "here0\n";
-    //    for (int i = 0; i < q1; ++i) {
-    //        for (int j = 0; j < q2; ++j)
-    //            QR[i][q1 + j] = 1;
-    //    }
-    //} if (qb[1] == q1*q1) {
-    //    //cout << "here1\n";
-    //    for (int i = 0; i < q1; ++i) {
-    //        for (int j = 0; j < q1; ++j)
-    //            QR[i][j] = 1;
-    //    }
-    //} if (qb[2] == q1*q2) {
-    //    //cout << "here2\n";
-    //    for (int i = 0; i < q2; ++i) {
-    //        for (int j = 0; j < q1; ++j)
-    //            QR[q1 + i][j] = 1;
-    //    }
-    //} if (qb[3] == q2*q2) {
-    //    //cout << "here3\n";
-    //    for (int i = 0; i < q2; ++i) {
-    //        for (int j = 0; j < q2; ++j)
-    //            QR[q1 + i][q1 + j] = 1;
-    //    }
-    //}
-    
+
+    //preto branco ou branco preto sempre
+    if(n % 2){
+        for (int i = 0; i < n; ++i) {
+            if(lt[i] == n-1 && lb[i] > 0){
+                if(lb[i]>n/2){
+                    for (int x = 0; x < n; x+=2) {
+                        QR[i][x] = 1;
+                    }
+                } else if (lb[i] == n/2 && lb[i] > 0) {
+                    for (int x = 1; x < n; x+=2) {
+                        QR[i][x] = 1;
+                    }
+                } else  {
+                    cout << "DEFECT: No QR Code generated!\n";
+                    return;
+                }
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            if(ct[i] == n-1){
+                if(cb[i] > n/2 && cb[i] > 0){
+                    for (int x = 0; x < n; x+=2) {
+                        QR[x][i] = 1;
+                    }
+                } else if (cb[i] > n/2 && cb[i] > 0) {
+                    for (int x = 1; x < n; x+=2) {
+                        QR[x][i] = 1;
+                    }
+                } else  {
+                    cout << "DEFECT: No QR Code generated!\n";
+                    return;
+                }
+            }
+        }
+    }
+
+    int q1, q2;
+    if (n%2 == 0) {
+        q1 = q2 = n/2;
+    } else {
+        q1 = n/2;
+        q2 = n/2 + 1;
+    } if (qb[0] == q1*q2) {
+        //cout << "here0\n";
+        for (int i = 0; i < q1; ++i) {
+            for (int j = 0; j < q2; ++j)
+                QR[i][q1 + j] = 1;
+        }
+    } if (qb[1] == q1*q1) {
+        //cout << "here1\n";
+        for (int i = 0; i < q1; ++i) {
+            for (int j = 0; j < q1; ++j)
+                QR[i][j] = 1;
+        }
+    } if (qb[2] == q1*q2) {
+        //cout << "here2\n";
+        for (int i = 0; i < q2; ++i) {
+            for (int j = 0; j < q1; ++j)
+                QR[q1 + i][j] = 1;
+        }
+    } if (qb[3] == q2*q2) {
+        //cout << "here3\n";
+        for (int i = 0; i < q2; ++i) {
+            for (int j = 0; j < q2; ++j)
+                QR[q1 + i][q1 + j] = 1;
+        }
+    }
 
     
     for (int i = 0; i < n; ++i) {
@@ -401,8 +505,6 @@ void solve() {
             if((j == (int) QR.size() - 1 - i)  && QR[i][j])  db[1]--;
         }
     }
-
-
     recursion(QR, 0, 0);
     if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
