@@ -47,17 +47,12 @@ void printQR(vector<vector<int>> &QR) {
 
 
 bool validation(vector<vector<int>> &QR){
-    int N, C, Tx, Tc, D1, D2;
-    N = C = Tx = Tc = D1 = D2 = 0;
-
-    int Q1, Q2, Q3, Q4;
-    Q1 = Q2 = Q3 = Q4 = 0;
+    int Tx, Tc;
+    Tx = Tc =  0;
 
     for (int i = 0; i < (int) QR.size(); ++i) {
         for (int j = 0; j < (int) QR.size(); ++j) {
             
-            if(i==j && QR[i][j]==1) D1++;
-            if((j== (int) QR.size() - 1 - i) && QR[i][j])  D2++;
             if((j+1)<(int) QR.size() && QR[i][j] != QR[i][j+1]){
                 Tx++;
             }
@@ -241,6 +236,7 @@ void solve() {
     int n;
     int ncol=0, nlin=0, nquad=0;
     int col0=0, lin0=0;
+    int coln=0, linn=0;
 
     cin >> n;
     vector<vector<int>> QR(n, vector<int>(n, 0));
@@ -249,11 +245,13 @@ void solve() {
         cin >> lb[i];
         nlin+= lb[i];
         if(lb[i]==0) lin0++;
+        else if(lb[i]==n) linn++;
     }
     for (int i = 0; i < n; ++i) {
         cin >> cb[i];
         ncol+=cb[i];
         if(cb[i]==0) col0++;
+        else if(cb[i]==n) coln++;
     }
     for (int i = 0; i < n; ++i) {
         cin >> lt[i];
@@ -287,27 +285,37 @@ void solve() {
             return;
         }
     }
-
+    
+    for (int i = 0; i < n; ++i) {
+        if(lb[i] < coln){
+            cout << "DEFECT: No QR Code generated!\n";
+            return;
+        }
+        else if(cb[i] < linn){
+            cout << "DEFECT: No QR Code generated!\n";
+            return;
+        }
+    }
 
     if(nlin != ncol){ 
         cout << "DEFECT: No QR Code generated!\n";
         return;
     }
-    if(nlin != nquad){ 
+    else if(nlin != nquad){ 
         cout << "DEFECT: No QR Code generated!\n";
         return;
     }
-    if(ncol!= nquad){ 
-        cout << "DEFECT: No QR Code generated!\n";
-        return;
-    }
-
-    if(lin0 > n - db[0] || lin0 > n - db[1]){ 
+    else if(ncol!= nquad){ 
         cout << "DEFECT: No QR Code generated!\n";
         return;
     }
 
-    if(col0 > n - db[0] || col0 > n - db[1]){ 
+    else if(lin0 > n - db[0] || lin0 > n - db[1]){ 
+        cout << "DEFECT: No QR Code generated!\n";
+        return;
+    }
+
+    else if(col0 > n - db[0] || col0 > n - db[1]){ 
         cout << "DEFECT: No QR Code generated!\n";
         return;
     }
@@ -316,30 +324,6 @@ void solve() {
     chao = n / 2;
     chao--;
     
-
-    // int q1, q2, q3, q4;
-    // if (n%2 == 0) {
-    //   q1 = q2 = q3 = q4 = n/2;
-    // } else {
-    //   q1 = pow(n/2 + 1, 2);
-    //   q2 = pow(n/2, 2);
-    //   q3 = pow(n/2 + 1, 2);
-    //   q4 = pow(n/2, 2);
-    // }
-    // if (qb[0] > q1) {
-    //     cout << "DEFECT: No QR Code generated!\n";
-    //     return;
-    // } else if (qb[1] > q2) {
-    //     cout << "DEFECT: No QR Code generated!\n";
-    //     return;
-    // } else if (qb[2] > q3) {
-    //     cout << "DEFECT: No QR Code generated!\n";
-    //     return;
-    // } else if (qb[3] > q4) {
-    //     cout << "DEFECT: No QR Code generated!\n";
-    //     return;
-    // }
-      
 
     for (int i = 0; i < n; ++i) {
         if(lb[i] == n){
