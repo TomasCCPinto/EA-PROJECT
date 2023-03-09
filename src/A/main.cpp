@@ -8,7 +8,7 @@
 using namespace std;
 
 
-//int conta;
+int conta;
 
 vector<vector<int>> cp;
 
@@ -75,7 +75,7 @@ bool validation(vector<vector<int>> &QR){
 
 void recursion(vector<vector<int>> &QR, int i, int j) {
 
-    //conta++;
+    conta++;
 
     if (lb[i] < 0 || cb[j] < 0)
         return;
@@ -99,6 +99,28 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         recursion(QR, i+1, 0);
         return;
     }
+
+    //numero de transiçoes restantes maior do que as possiveis para certo espaço -> cortar
+
+    if(lb[i]> (int) QR.size()-j){
+        return;
+    }
+    
+    if(cb[j]> (int) QR.size()-i){
+        return;
+    }
+
+
+    if( i==j && db[0] > (int) QR.size()-i){
+        return;
+    }
+    
+    if( i== (int) QR.size()-j-1 && db[1] > (int) QR.size()-i){
+        return;
+    }
+
+    //q0 -> (n - j) + (n-i)    
+    
 
     if(j>0){
         int contatx=0;
@@ -525,32 +547,34 @@ void solve() {
         q1 = n/2;
         q2 = n/2 + 1;
     } if (qb[0] == q1*q2) {
-        //cout << "here0\n";
         for (int i = 0; i < q1; ++i) {
             for (int j = 0; j < q2; ++j)
                 QR[i][q1 + j] = 1;
         }
     } if (qb[1] == q1*q1) {
-        //cout << "here1\n";
         for (int i = 0; i < q1; ++i) {
             for (int j = 0; j < q1; ++j)
                 QR[i][j] = 1;
         }
     } if (qb[2] == q1*q2) {
-        //cout << "here2\n";
         for (int i = 0; i < q2; ++i) {
             for (int j = 0; j < q1; ++j)
                 QR[q1 + i][j] = 1;
         }
     } if (qb[3] == q2*q2) {
-        //cout << "here3\n";
         for (int i = 0; i < q2; ++i) {
             for (int j = 0; j < q2; ++j)
                 QR[q1 + i][q1 + j] = 1;
         }
     }
 
-    
+
+
+    //ver caso de 1 transiçao -> tudo no inicio ou no fim
+
+
+
+
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(QR[i][j]){
@@ -579,14 +603,21 @@ void solve() {
 
 
 int main() {
+    auto start = chrono::high_resolution_clock::now();
     int t;
     cin >> t;
     
-    //conta=0;
+    
     while (t--) {
+        auto start = chrono::high_resolution_clock::now();
+        conta=0;
 	    solve();
+        cout << conta << endl;
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto all_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        std::cout << "Time: " << all_time.count() << " milliiseconds\n";
     }
-    //cout << conta << endl;
+    
 
     return 0;
 }
