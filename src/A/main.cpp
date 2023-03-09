@@ -486,11 +486,11 @@ void solve() {
     if(n % 2){
         for (int i = 0; i < n; ++i) {
             if(lt[i] == n-1 && lb[i] > 0){
-                if(lb[i]>n/2){
+                if(lb[i] == n/2+1){
                     for (int x = 0; x < n; x+=2) {
                         QR[i][x] = 1;
                     }
-                } else if (lb[i] == n/2 && lb[i] > 0) {
+                } else if (lb[i] == n/2 ) {
                     for (int x = 1; x < n; x+=2) {
                         QR[i][x] = 1;
                     }
@@ -501,12 +501,12 @@ void solve() {
             }
         }
         for (int i = 0; i < n; ++i) {
-            if(ct[i] == n-1){
-                if(cb[i] > n/2 && cb[i] > 0){
+            if(ct[i] == n-1 && cb[i] > 0){
+                if(cb[i] == n/2 + 1 ){
                     for (int x = 0; x < n; x+=2) {
                         QR[x][i] = 1;
                     }
-                } else if (cb[i] > n/2 && cb[i] > 0) {
+                } else if (cb[i] == n/2 ) {
                     for (int x = 1; x < n; x+=2) {
                         QR[x][i] = 1;
                     }
