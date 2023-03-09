@@ -299,6 +299,67 @@ void solve() {
         }
     }
 
+    if (n%2) {
+        for (int i = 0; i < n; ++i) {
+            if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (lb[i] > n/2+1 && (n-lb[i])*2 < lt[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (lt[i] > n-1 ) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            }
+            if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (cb[i] > n/2+1 && (n-cb[i])*2 < ct[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (ct[i] > n-1) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            }
+        }
+    } else {
+        for (int i = 0; i < n; ++i) {
+            if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (lb[i] > n/2 && (n-lb[i])*2 < lt[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } if (lt[i] > n-1) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            }
+            if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } else if (cb[i] > n/2 && (n-cb[i])*2 < ct[i]) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            } if (ct[i] > n-1) {
+                cout << "DEFECT: No QR Code generated!\n"; return;
+            }
+        }
+    }
+
+    int md = n/2;
+    int cl = 0, cc = 0;
+    for (int i = 0; i < md; ++i) {
+        cl += lb[i];
+        cc += cb[i];
+    }
+    if (cl != qb[0] + qb[1]) {
+        cout << "DEFECT: No QR Code generated!\n";
+        return;
+    } else if (cc != qb[1] + qb[2]) {
+        cout << "DEFECT: No QR Code generated!\n";
+        return;
+    }
+    cl = 0, cc = 0;
+    for (int i = md; i < n; ++i) {
+        cl += lb[i];
+        cc += cb[i];
+    }
+    if (cl > qb[2] + qb[3]) {
+        cout << "DEFECT: No QR Code generated!\n";
+        return;
+    } else if (cc != qb[0] + qb[3]) {
+        cout << "DEFECT: No QR Code generated!\n";
+        return;
+    }
     
     
     for (int i = 0; i < n; ++i) {
