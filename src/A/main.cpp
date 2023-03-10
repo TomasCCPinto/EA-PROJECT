@@ -207,6 +207,37 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         }
         if(contatc>ct[j]) return;
     }
+
+    // completar o resto das transiçoes preto branco e branco preto
+    // if (((int) QR.size() - j) % 2) {
+    //     for (int i = j; i < (int) QR.size(); ++i) {
+    //         if(lt[i] == (int) QR.size() - j-1 && lb[i] > 0){
+    //             if(lb[i] == (int) QR.size()/2+1) {
+    //                 for (int x = 0; x < (int) QR.size(); x+=2) {
+    //                     QR[i][x] = 1;
+    //                 }
+    //             } else if (lb[i] == (int) QR.size()/2 ) {
+    //                 for (int x = 1; x < (int) QR.size(); x+=2) {
+    //                     QR[i][x] = 1;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     for (int i = 0; i < n; ++i) {
+    //         if(ct[i] == n-1 && cb[i] > 0){
+    //             if(cb[i] == n/2 + 1 ){
+    //                 for (int x = 0; x < n; x+=2) {
+    //                     QR[x][i] = 1;
+    //                 }
+    //             } else if (cb[i] == n/2 ) {
+    //                 for (int x = 1; x < n; x+=2) {
+    //                     QR[x][i] = 1;
+    //                 }
+    //             }            
+    //         }
+    //     }
+    // }
+
     
     if(lb[i] == (int) QR.size() - j){
         bool v = false;
