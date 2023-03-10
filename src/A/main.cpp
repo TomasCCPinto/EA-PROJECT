@@ -85,6 +85,8 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     if (j != 0 && cb[j-1] < 0)
         return;
+    if (i != 0 && lb[i-1] < 0)
+        return;
 
     if (i == (int) QR.size()) {
         if (validation(QR) && !db[0] && !db[1]) {
@@ -119,7 +121,76 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     }
 
-    //q0 -> (n - j) + (n-i)    
+    //q0 -> (n - j) + (chao-i)*
+
+    if((int) QR.size() % 2 == 0){
+        int qq;
+        if(i <= chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if(qb[0]>qq) return;
+            // else if (qb[0] == qq) {
+            //     
+            //     for (int x = j; x < (int) QR.size(); ++x) {
+            //         QR[i][x] = 1;
+            //         lb[i]--;
+            //         cb[x]--;
+            //         if (x == (int) QR.size() - 1 - i)  db[1]--;
+            //     }
+            //     
+            //     for (int y = i+1; i < chao; ++y) {
+            //         for (int x = chao+1; x < QR.size(); ++x) {
+            //             lb[y]--;
+            //             cb[x]--;
+            //             QR[y][x] = 1;
+            //             if (x == (int) QR.size() - 1 - y)  db[1]--;
+            //         }
+            //     }
+            //     
+            //     int qb_number = qb[0];
+            //     qb[0] = 0;
+            //     recursion(QR, i+1, 0);
+            //     for (int x = j; x < (int) QR.size(); ++x) {
+            //         QR[i][x] = 0;
+            //         lb[i]++;
+            //         cb[x]++;
+            //         if (x == (int) QR.size() - 1 - i)  db[1]++;
+            //     }
+            //     for (int y = i+1; i < chao; ++y) {
+            //         for (int x = chao+1; x < QR.size(); ++x) {
+            //             lb[y]++;
+            //             cb[x]++;
+            //             QR[y][x] = 0;
+            //             if (x == (int) QR.size() - 1 - y)  db[1]++;
+            //         }
+            //     }
+            //     qb[0] = qb_number;
+            // }
+        } else if (i <= chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if(qb[1]>qq) return;    
+        } else if (i >  chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if(qb[2]>qq) return;    
+        } else if (i >  chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if(qb[0]>qq) return;    
+        }
+    } else {
+        int qq;
+        if(i <= chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2 + 1));
+            if(qb[0]>qq) return;
+        } else if (i <= chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if(qb[1]>qq) return;    
+        } else if (i >  chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if(qb[2]>qq) return;    
+        } else if (i >  chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2 + 1));
+            if(qb[0]>qq) return;    
+        }
+    }
     
 
     if(j>0){
