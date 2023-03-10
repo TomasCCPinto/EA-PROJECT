@@ -8,7 +8,7 @@
 using namespace std;
 
 
-int conta;
+//int conta;
 
 vector<vector<int>> cp;
 
@@ -75,7 +75,7 @@ bool validation(vector<vector<int>> &QR){
 
 void recursion(vector<vector<int>> &QR, int i, int j) {
 
-    conta++;
+    //conta++;
 
     if (lb[i] < 0 || cb[j] < 0)
         return;
@@ -193,20 +193,125 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     }
     
 
+    int contatx=0;
+    int contatc=0;
     if(j>0){
-        int contatx=0;
+        
         for (int x = 1; x < j; x++){
             if(QR[i][x] != QR[i][x-1]) contatx++; 
         }
         if(contatx>lt[i]) return;
     }
     if(i>0){
-        int contatc=0;
         for (int x = 1; x < i; x++){
             if(QR[x][j] != QR[x-1][j]) contatc++; 
         }
         if(contatc>ct[j]) return;
     }
+
+
+
+    //if (n%2) {
+    //    for (int i = 0; i < n; ++i) {
+    //        if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (lb[i] > n/2+1 && (n-lb[i])*2 < lt[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (lt[i] > n-1 ) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        }
+    //        if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (cb[i] > n/2+1 && (n-cb[i])*2 < ct[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (ct[i] > n-1) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        }
+    //    }
+    //} else {
+    //    for (int i = 0; i < n; ++i) {
+    //        if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (lb[i] > n/2 && (n-lb[i])*2 < lt[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } if (lt[i] > n-1) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        }
+    //        if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } else if (cb[i] > n/2 && (n-cb[i])*2 < ct[i]) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        } if (ct[i] > n-1) {
+    //            cout << "DEFECT: No QR Code generated!\n"; return;
+    //        }
+    //    }
+    //}
+
+
+    if(i>0 && j>0){
+        int taml = (int) QR.size()-j;
+        if (taml%2==0) {
+
+            int pretos=lb[i];
+            for (int x = j; x < (int) QR.size() ; x++)
+            {
+                if(QR[i][x]) pretos++;
+            }
+            
+
+            if(pretos==taml/2 && (lt[i]-contatx)> (2*pretos)) return;
+            //--
+            else if((pretos<taml/2) && (lt[i]-contatx) > (2*pretos+1)){ 
+                return;
+            }
+            else if(pretos>taml/2 && (lt[i]-contatx) > (2*(taml - pretos)+1)) return;
+        }
+        else{
+
+            int pretos=lb[i];
+            for (int x = j; x < (int) QR.size() ; x++)
+            {
+                if(QR[i][x]) pretos++;
+            }
+
+            if(pretos==taml/2 && (lt[i]-contatx)> (2*pretos)+1) return;
+            else if((pretos==taml/2 +1) && (lt[i]-contatx)> (2*pretos)+1) return;
+            //--
+            else if((pretos<taml/2) && (lt[i]-contatx) > (2*pretos+1)) return;
+            else if((pretos>taml/2+1) && (lt[i]-contatx) > (2*(taml - pretos)+1)) return;
+        }
+
+        int tamc = (int) QR.size()-i;
+        if (tamc%2==0) {
+
+            int pretos=cb[j];
+            for (int x = i; x < (int) QR.size() ; x++)
+            {
+                if(QR[x][j]) pretos++;
+            }
+
+            if(pretos==tamc/2 && (ct[j]-contatc)> (2*pretos)) return;
+            //--
+            else if((pretos<tamc/2) && (ct[j]-contatc) > (2*pretos+1)) return;
+            else if(pretos>tamc/2 && (ct[j]-contatc) > (2*(tamc - pretos)+1)) return;
+        }
+        else{
+
+            int pretos=cb[j];
+            for (int x = i; x < (int) QR.size() ; x++)
+            {
+                if(QR[x][j]) pretos++;
+            }
+
+            if(pretos==tamc/2 && (ct[j]-contatc)> (2*pretos)+1) return;
+            else if((pretos==tamc/2 +1) && (ct[j]-contatc)> (2*pretos)+1) return;
+            //--
+            else if((pretos<tamc/2) && (ct[j]-contatc) > (2*pretos+1)) return;
+            else if((pretos>tamc/2+1) && (ct[j]-contatc) > (2*(tamc - pretos)+1)) return;
+        }
+    }
+
+
 
     // completar o resto das transiçoes preto branco e branco preto
     // if (((int) QR.size() - j) % 2) {
@@ -670,7 +775,33 @@ void solve() {
         }
     }
 
+    for (int i = 0; i < n; ++i) {
+        if(lt[i]==1){
+            if(cb[0]==0){
+                for (int j = n-1; j >= (n- lb[i]); j--) {
+                    QR[i][j]=1;
+                } 
+            }
+            else if(cb[n-1]==0){
+                for (int j = 0; j < lb[i] ; j++) {
+                    QR[i][j]=1;
+                } 
+            }
+        }
+        if(ct[i]==1){
+            if(lb[0]==0){
+                for (int j = n-1; j >= (n- cb[i]); j--) {
+                    QR[j][i]=1;
+                } 
+            }
+            else if(lb[n-1]==0){
+                for (int j = 0; j < cb[i] ; j++) {
+                    QR[j][i]=1;
+                } 
+            }
+        }
 
+    }
 
     //ver caso de 1 transiçao -> tudo no inicio ou no fim
 
@@ -692,6 +823,7 @@ void solve() {
             if((j == (int) QR.size() - 1 - i)  && QR[i][j])  db[1]--;
         }
     }
+
     recursion(QR, 0, 0);
     if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
@@ -705,19 +837,19 @@ void solve() {
 
 
 int main() {
-    auto start = chrono::high_resolution_clock::now();
+    //auto start = chrono::high_resolution_clock::now();
     int t;
     cin >> t;
     
     
     while (t--) {
-        auto start = chrono::high_resolution_clock::now();
-        conta=0;
+        //auto start = chrono::high_resolution_clock::now();
+        //conta=0;
 	    solve();
-        cout << conta << endl;
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto all_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-        std::cout << "Time: " << all_time.count() << " milliiseconds\n";
+        //cout << conta << endl;
+        //auto stop = std::chrono::high_resolution_clock::now();
+        //auto all_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        //std::cout << "Time: " << all_time.count() << " milliiseconds\n";
     }
     
 
