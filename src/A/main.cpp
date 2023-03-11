@@ -103,24 +103,50 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     }
 
    
-
-    if(lb[i]> (int) QR.size()-j){
-        return;
+    int lrestantes=(int) QR.size()-j;
+    for (int x = j; x < (int) QR.size(); x++){
+        if(QR[i][x]) lrestantes--;
     }
     
-    if(cb[j]> (int) QR.size()-i){
+    if(lb[i]> lrestantes){
         return;
     }
 
-
-    if( i==j && db[0] > (int) QR.size()-i){
-        return;
+    int crestantes=(int) QR.size()-i;
+    for (int x = i; x < (int) QR.size(); x++){
+        if(QR[x][j]) crestantes--;
     }
     
-    if( i== (int) QR.size()-j-1 && db[1] > (int) QR.size()-i){
+    if(cb[j]> crestantes){
         return;
     }
 
+    if(i==j){
+        int d0restantes=(int) QR.size()-i;
+        int contad0=0;
+        for (int x = i; x < (int) QR.size(); x++){
+            if(QR[x][j+contad0]) d0restantes--;
+            contad0++;
+        }
+
+        if( db[0] > d0restantes){
+            return;
+        }
+    }
+    
+    if(i== (int) QR.size()-j-1){
+
+        int d1restantes=(int) QR.size()-i;
+        int contad1=0;
+        for (int x = i; x < (int) QR.size(); x++){
+            if(QR[x][j+contad1]) d1restantes--;
+            contad1--;
+        }
+
+        if( db[1] > d1restantes){
+            return;
+        }
+    }
 
     //VER ISTO CASO DE PRE PROCESSAMENTO JA COLOCAR CELULAS A 1
     if((int) QR.size() % 2 == 0){
