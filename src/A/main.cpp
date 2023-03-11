@@ -102,7 +102,7 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     }
 
-    //numero de transiçoes restantes maior do que as possiveis para certo espaço -> cortar
+   
 
     if(lb[i]> (int) QR.size()-j){
         return;
@@ -121,73 +121,128 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         return;
     }
 
-    //q0 -> (n - j) + (chao-i)*
 
+    //VER ISTO CASO DE PRE PROCESSAMENTO JA COLOCAR CELULAS A 1
     if((int) QR.size() % 2 == 0){
         int qq;
         if(i <= chao && j >  chao) {
             qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            
+            //cout << "q1\n";
+            for (int x = j; x < (int) QR.size(); ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y <= chao; ++y) {
+                for (int x = chao+1; x < QR.size(); ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[0]>qq) return;
-            // else if (qb[0] == qq) {
-            //     
-            //     for (int x = j; x < (int) QR.size(); ++x) {
-            //         QR[i][x] = 1;
-            //         lb[i]--;
-            //         cb[x]--;
-            //         if (x == (int) QR.size() - 1 - i)  db[1]--;
-            //     }
-            //     
-            //     for (int y = i+1; i < chao; ++y) {
-            //         for (int x = chao+1; x < QR.size(); ++x) {
-            //             lb[y]--;
-            //             cb[x]--;
-            //             QR[y][x] = 1;
-            //             if (x == (int) QR.size() - 1 - y)  db[1]--;
-            //         }
-            //     }
-            //     
-            //     int qb_number = qb[0];
-            //     qb[0] = 0;
-            //     recursion(QR, i+1, 0);
-            //     for (int x = j; x < (int) QR.size(); ++x) {
-            //         QR[i][x] = 0;
-            //         lb[i]++;
-            //         cb[x]++;
-            //         if (x == (int) QR.size() - 1 - i)  db[1]++;
-            //     }
-            //     for (int y = i+1; i < chao; ++y) {
-            //         for (int x = chao+1; x < QR.size(); ++x) {
-            //             lb[y]++;
-            //             cb[x]++;
-            //             QR[y][x] = 0;
-            //             if (x == (int) QR.size() - 1 - y)  db[1]++;
-            //         }
-            //     }
-            //     qb[0] = qb_number;
-            // }
         } else if (i <= chao && j <= chao) {
             qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+
+            //cout <<"q2\n";
+            for (int x = j; x <= chao; ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y <= chao; ++y) {
+                for (int x = 0; x <= chao; ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[1]>qq) return;    
         } else if (i >  chao && j <= chao) {
             qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            //cout <<"q3\n";
+            for (int x = j; x <= chao; ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y < (int) QR.size(); ++y) {
+                for (int x = 0; x <= chao; ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[2]>qq) return;    
         } else if (i >  chao && j >  chao) {
             qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+
+            //cout <<"q4\n";
+            for (int x = j; x < (int) QR.size(); ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y < (int) QR.size(); ++y) {
+                for (int x = chao+1; x < (int) QR.size(); ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[0]>qq) return;    
         }
-    } else {
+    } else {   //----------------------------------ÍMPAR ---------------------------------------
         int qq;
         if(i <= chao && j >  chao) {
             qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2 + 1));
+            //cout << "aqui1\n";
+            for (int x = j; x < (int) QR.size(); ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y <= chao; ++y) {
+                    for (int x = chao+1; x < QR.size(); ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[0]>qq) return;
         } else if (i <= chao && j <= chao) {
             qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            //cout << "aqui2\n";
+            for (int x = j; x <= chao; ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y <= chao; ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[1]>qq) return;    
         } else if (i >  chao && j <= chao) {
             qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            //cout << "aqui3\n";
+            for (int x = j; x <= chao; ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[2]>qq) return;    
         } else if (i >  chao && j >  chao) {
             qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2 + 1));
+
+            //cout << "aqui4\n";
+            for (int x = j; x < (int) QR.size(); ++x) {
+                if(QR[i][x]) qq--;
+            }
+
+            for (int y = i+1; y < (int) QR.size(); ++y) {
+                for (int x = chao+1; x < (int) QR.size(); ++x) {
+                    if(QR[y][x]) qq--;
+                }
+            }
+
             if(qb[0]>qq) return;    
         }
     }
@@ -210,44 +265,7 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
     }
 
 
-
-    //if (n%2) {
-    //    for (int i = 0; i < n; ++i) {
-    //        if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (lb[i] > n/2+1 && (n-lb[i])*2 < lt[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (lt[i] > n-1 ) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        }
-    //        if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (cb[i] > n/2+1 && (n-cb[i])*2 < ct[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (ct[i] > n-1) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        }
-    //    }
-    //} else {
-    //    for (int i = 0; i < n; ++i) {
-    //        if (lb[i] < n/2 && lb[i]*2 < lt[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (lb[i] > n/2 && (n-lb[i])*2 < lt[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } if (lt[i] > n-1) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        }
-    //        if (cb[i] < n/2 && cb[i]*2 < ct[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } else if (cb[i] > n/2 && (n-cb[i])*2 < ct[i]) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        } if (ct[i] > n-1) {
-    //            cout << "DEFECT: No QR Code generated!\n"; return;
-    //        }
-    //    }
-    //}
-
-
+     //numero de transiçoes restantes maior do que as possiveis para certo espaço -> cortar
     if(i>0 && j>0){
         int taml = (int) QR.size()-j;
         if (taml%2==0) {
@@ -380,6 +398,502 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         }
         return;
     }
+
+    if(cb[j] == (int) QR.size() - i){
+        bool v = false;
+        for (int x = i; x < (int) QR.size(); x++) {
+            if(!lb[x])v = true;
+        }
+        if(!v){
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j] = 1;
+                lb[x]--;
+                cb[j]--;
+                if (x <= chao && j >  chao) qb[0]--;
+                else if (x <= chao && j <= chao) qb[1]--;
+                else if (x >  chao && j <= chao) qb[2]--;
+                else if (x >  chao && j >  chao) qb[3]--;
+
+                if(x == j) db[0]--;
+                if(j == (int) QR.size() - 1 - x)  db[1]--;
+            }
+
+            recursion(QR, i, j+1);
+
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j] = 0;
+                lb[x]++;
+                cb[j]++;
+                if (x <= chao && j >  chao) qb[0]++;
+                else if (x <= chao && j <= chao) qb[1]++;
+                else if (x >  chao && j <= chao) qb[2]++;
+                else if (x >  chao && j >  chao) qb[3]++;
+
+                if(x == j) db[0]++;
+                if(j == (int) QR.size() - 1 - x)  db[1]++;
+            }
+        }
+        return;
+    }
+
+    if( i==j && db[0] == (int) QR.size() - i){
+        int contador=0;
+        bool v = false;
+        for (int x = i; x < (int) QR.size(); x++) {
+            if(!lb[x])v = true;
+            if(!cb[x+contador])v = true;
+            contador=0;
+        }
+
+        if(!v){
+            contador = 0;
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j+contador] = 1;
+                lb[x]--;
+                cb[j+contador]--;
+                if (x <= chao && j+contador >  chao) qb[0]--;
+                else if (x <= chao && j+contador <= chao) qb[1]--;
+                else if (x >  chao && j+contador <= chao) qb[2]--;
+                else if (x >  chao && j+contador >  chao) qb[3]--;
+
+                if(x == j+contador) db[0]--;
+                if(j+contador == (int) QR.size() - 1 - x)  db[1]--;
+                contador++;
+            }
+
+            recursion(QR, i, j+1);
+
+            contador = 0;
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j+contador] = 0;
+                lb[x]++;
+                cb[j+contador]++;
+                if (x <= chao && j+contador >  chao) qb[0]++;
+                else if (x <= chao && j+contador <= chao) qb[1]++;
+                else if (x >  chao && j+contador <= chao) qb[2]++;
+                else if (x >  chao && j+contador >  chao) qb[3]++;
+
+                if(x == j+contador) db[0]++;
+                if(j+contador == (int) QR.size() - 1 - x)  db[1]++;
+                contador++;
+            }
+
+        }
+        return;
+
+    }
+
+
+    //----------------------------------------------------------------------------------------------------------
+    
+
+    if((int) QR.size() % 2 == 0){
+        int qq;
+        if(i <= chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if (qb[0] == qq) {
+                vector<vector<int>> aux = QR;
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == (int) QR.size() - 1 - i)  db[1]--;
+                    }
+                }
+                
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = chao+1; x < QR.size(); ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == (int) QR.size() - 1 - y)  db[1]--;
+                        }
+                    }
+                }
+                int qb_number = qb[0];
+                qb[0] = 0;
+                recursion(QR, i+1, 0);
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == (int) QR.size() - 1 - i)  db[1]++;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = chao+1; x < QR.size(); ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == (int) QR.size() - 1 - y)  db[1]++;
+                        }
+                    }
+                }
+                qb[0] = qb_number;
+                return;
+            }
+        } else if (i <= chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if (qb[1] == qq) {
+                vector<vector<int>> aux = QR;
+                // preenche linha
+                for (int x = j; x <= chao; ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == i)  db[0]--;
+                    }
+                }
+                // preenche restante
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == y)  db[0]--;
+                        }
+                    }
+                }
+                int qb_number = qb[1];
+                qb[1] = 0;
+
+                recursion(QR, i, chao+1);
+
+                for (int x = j; x <= chao; ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == i)  db[0]++;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == y)  db[0]++;
+                        }
+                    }
+                }
+                qb[1] = qb_number;
+                return;
+            }
+
+        } else if (i >  chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if (qb[2] == qq) {
+                vector<vector<int>> aux = QR;
+                // preenche linha
+                for (int x = j; x <= chao; ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == (int) QR.size() - 1 - i)  db[1]--;
+                    }
+                }
+                // preenche restante
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == (int) QR.size() - 1 - i)  db[1]--;
+                        }
+                    }
+                }
+                int qb_number = qb[2];
+                qb[2] = 0;
+
+                recursion(QR, i, chao+1);
+
+                for (int x = j; x <= chao; ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == (int) QR.size() - 1 - i)  db[1]++;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == (int) QR.size() - 1 - i)  db[1]++;
+                        }
+                    }
+                }
+                qb[2] = qb_number;
+                return;
+            }
+        } else if (i >  chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if (qb[3] == qq) {
+                vector<vector<int>> aux = QR;
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == i)  db[0]--;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = chao+1; x < (int) QR.size(); ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == y)  db[0]--;
+                        }
+                    }
+                }
+                int qb_number = qb[3];
+                qb[3] = 0;
+                recursion(QR, i+1, 0);
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == i)  db[0]++;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = chao+1; x < (int) QR.size(); ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == y)  db[0]++;
+                        }
+                    }
+                }
+                qb[3] = qb_number;
+                return;
+            }
+        }
+    } else {
+        // ================================== impar =============================================00
+        int qq;
+        if(i <= chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2 + 1));
+            if (qb[0] == qq) {
+                //cout << "aqui1\n";
+                vector<vector<int>> aux = QR;
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == (int) QR.size() - 1 - i)  db[1]--;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = chao+1; x < QR.size(); ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == (int) QR.size() - 1 - y)  db[1]--;
+                        }
+                    }
+                }
+                int qb_number = qb[0];
+                qb[0] = 0;
+                recursion(QR, i+1, 0);
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == (int) QR.size() - 1 - i)  db[1]++;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = chao+1; x < QR.size(); ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == (int) QR.size() - 1 - y)  db[1]++;
+                        }
+                    }
+                }
+                qb[0] = qb_number;
+                return;
+            }
+        } else if (i <= chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size()/2 - i - 1) * ((int) QR.size()/2));
+            if (qb[1] == qq) {
+                //cout << "aquiq2\n";
+                vector<vector<int>> aux = QR;
+                for (int x = j; x <= chao; ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == i)  db[0]--;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == y)  db[0]--;
+                        }
+                    }
+                }
+                int qb_number = qb[1];
+                qb[1] = 0;
+
+                recursion(QR, i, chao+1);
+
+                for (int x = j; x <= chao; ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == i)  db[0]++;
+                    }
+                }
+                for (int y = i+1; y <= chao; ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == y)  db[0]++;
+                        }
+                    }
+                }
+                qb[1] = qb_number;
+                return;
+            }
+        } 
+        else if (i >  chao && j <= chao) {
+            qq = ((int) QR.size()/2 - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2));
+            if (qb[2] == qq) {
+                //cout << "aqui3\n";
+                //printQR(QR);
+                //cout << i << " "<< j <<"\n";
+                //cout << qb[2] << " " << qq << endl;
+                vector<vector<int>> aux = QR;
+                // preenche linha
+                for (int x = j; x <= chao; ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == (int) QR.size() - 1 - i)  db[1]--;
+                    }
+                }
+                // preenche restante
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == (int) QR.size() - 1 - i)  db[1]--;
+                        }
+                    }
+                }
+                int qb_number = qb[2];
+                qb[2] = 0;
+
+                recursion(QR, i, chao+1);
+
+                for (int x = j; x <= chao; ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == (int) QR.size() - 1 - i)  db[1]++;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = 0; x <= chao; ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == (int) QR.size() - 1 - i)  db[1]++;
+                        }
+                    }
+                }
+                qb[2] = qb_number;
+                return;
+            }
+            
+        } else if (i >  chao && j >  chao) {
+            qq = ((int) QR.size() - j) + (((int) QR.size() - i - 1) * ((int) QR.size()/2 + 1));
+            if (qb[3] == qq) {
+                //cout << "aqui4\n";
+                vector<vector<int>> aux = QR;
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!QR[i][x]) {
+                        QR[i][x] = 1;
+                        lb[i]--;
+                        cb[x]--;
+                        if (x == i)  db[0]--;
+                        if (x == (int) QR.size() - 1 - i)  db[1]--;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = chao+1; x < (int) QR.size(); ++x) {
+                        if (!QR[y][x]) {
+                            lb[y]--;
+                            cb[x]--;
+                            QR[y][x] = 1;
+                            if (x == y)  db[0]--;
+                            if (x == (int) QR.size() - 1 - i)  db[1]--;
+                        }
+                    }
+                }
+                int qb_number = qb[3];
+                qb[3] = 0;
+                recursion(QR, i+1, 0);
+                for (int x = j; x < (int) QR.size(); ++x) {
+                    if (!aux[i][x]) {
+                        QR[i][x] = 0;
+                        lb[i]++;
+                        cb[x]++;
+                        if (x == i)  db[0]++;
+                        if (x == (int) QR.size() - 1 - i)  db[1]++;
+                    }
+                }
+                for (int y = i+1; y < (int) QR.size(); ++y) {
+                    for (int x = chao+1; x < (int) QR.size(); ++x) {
+                        if (!aux[y][x]) {
+                            lb[y]++;
+                            cb[x]++;
+                            QR[y][x] = 0;
+                            if (x == y)  db[0]++;
+                            if (x == (int) QR.size() - 1 - i)  db[1]++;
+                        }
+                    }
+                }
+                qb[3] = qb_number;
+                return;
+            }
+        }
+    }
+    // =================================== end ========================================
+
 
     //Q1 E Q2 DONE 
     if (i <= chao && !qb[1] && !qb[0]){
@@ -775,6 +1289,7 @@ void solve() {
         }
     }
 
+      
     for (int i = 0; i < n; ++i) {
         if(lt[i]==1){
             if(cb[0]==0){
@@ -805,8 +1320,7 @@ void solve() {
 
     //ver caso de 1 transiçao -> tudo no inicio ou no fim
 
-
-
+   
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -824,6 +1338,8 @@ void solve() {
         }
     }
 
+
+
     recursion(QR, 0, 0);
     if (valid_qr == 1) {
         cout << "VALID: 1 QR Code generated!\n";
@@ -837,7 +1353,7 @@ void solve() {
 
 
 int main() {
-    //auto start = chrono::high_resolution_clock::now();
+   
     int t;
     cin >> t;
     
