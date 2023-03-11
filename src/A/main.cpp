@@ -148,7 +148,7 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
         }
     }
 
-    //VER ISTO CASO DE PRE PROCESSAMENTO JA COLOCAR CELULAS A 1
+    //CASO DE PRE PROCESSAMENTO JA COLOCAR CELULAS A 1
     if((int) QR.size() % 2 == 0){
         int qq;
         if(i <= chao && j >  chao) {
@@ -509,8 +509,55 @@ void recursion(vector<vector<int>> &QR, int i, int j) {
 
     }
 
+    if( i== (int) QR.size()-j-1 && db[1] == (int) QR.size() - i){
+        int contador1=0;
+        bool v = false;
+        for (int x = i; x < (int) QR.size(); x++) {
+            if(!lb[x])v = true;
+            if(!cb[j+contador1])v = true;
+            contador1--;
+        }
 
-    //----------------------------------------------------------------------------------------------------------
+        if(!v){
+            contador1 = 0;
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j+contador1] = 1;
+                lb[x]--;
+                cb[j+contador1]--;
+                if (x <= chao && j+contador1 >  chao) qb[0]--;
+                else if (x <= chao && j+contador1 <= chao) qb[1]--;
+                else if (x >  chao && j+contador1 <= chao) qb[2]--;
+                else if (x >  chao && j+contador1 >  chao) qb[3]--;
+
+                if(x == j+contador1) db[0]--;
+                if(j+contador1 == (int) QR.size() - 1 - x)  db[1]--;
+                contador1--;
+            }
+
+            recursion(QR, i, j+1);
+
+            contador1 = 0;
+            for (int x = i; x < (int) QR.size(); x++) {
+                QR[x][j+contador1] = 0;
+                lb[x]++;
+                cb[j+contador1]++;
+                if (x <= chao && j+contador1 >  chao) qb[0]++;
+                else if (x <= chao && j+contador1 <= chao) qb[1]++;
+                else if (x >  chao && j+contador1 <= chao) qb[2]++;
+                else if (x >  chao && j+contador1 >  chao) qb[3]++;
+
+                if(x == j+contador1) db[0]++;
+                if(j+contador1 == (int) QR.size() - 1 - x)  db[1]++;
+                contador1--;
+            }
+
+        }
+        return;
+
+    }
+
+
+    //PREENCHER QUADRANTES------------------------------------------------------------------------------------------
     
 
     if((int) QR.size() % 2 == 0){
@@ -1318,24 +1365,52 @@ void solve() {
       
     for (int i = 0; i < n; ++i) {
         if(lt[i]==1){
-            if(cb[0]==0){
+
+            int posix=0;
+            for (int x = 0; x < lb[i]; x++)
+            {
+                if(cb[n-1-x]==0){ 
+                    posix=1;
+                    break;
+                }
+                if(cb[x]==0){
+                    posix=2;
+                    break;
+                }
+            }
+             
+            if(posix==2){
                 for (int j = n-1; j >= (n- lb[i]); j--) {
                     QR[i][j]=1;
                 } 
             }
-            else if(cb[n-1]==0){
+            else if(posix==1){
                 for (int j = 0; j < lb[i] ; j++) {
                     QR[i][j]=1;
                 } 
             }
         }
         if(ct[i]==1){
-            if(lb[0]==0){
+
+            int posic=0;
+            for (int x = 0; x < cb[i]; x++)
+            {
+                if(lb[n-1-x]==0){ 
+                    posic=1;
+                    break;
+                }
+                if(lb[x]==0){
+                    posic=2;
+                    break;
+                }
+            }
+
+            if(posic==2){
                 for (int j = n-1; j >= (n- cb[i]); j--) {
                     QR[j][i]=1;
                 } 
             }
-            else if(lb[n-1]==0){
+            else if(posic==1){
                 for (int j = 0; j < cb[i] ; j++) {
                     QR[j][i]=1;
                 } 
@@ -1363,8 +1438,7 @@ void solve() {
             if((j == (int) QR.size() - 1 - i)  && QR[i][j])  db[1]--;
         }
     }
-
-
+    
 
     recursion(QR, 0, 0);
     if (valid_qr == 1) {
@@ -1383,7 +1457,7 @@ int main() {
     int t;
     cin >> t;
     
-    
+    //auto start = chrono::high_resolution_clock::now();
     while (t--) {
         //auto start = chrono::high_resolution_clock::now();
         //conta=0;
@@ -1393,7 +1467,9 @@ int main() {
         //auto all_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
         //std::cout << "Time: " << all_time.count() << " milliiseconds\n";
     }
-    
+    //auto stop = std::chrono::high_resolution_clock::now();
+    //auto all_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    //std::cout << "Time: " << all_time.count() << " milliiseconds\n";
 
     return 0;
 }
