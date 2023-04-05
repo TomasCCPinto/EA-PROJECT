@@ -8,7 +8,7 @@ const int mod = 1e9 +7;
 int task, bestprofit, possibilities;
 int n, d, k, r;
 vector<int> history2;
-int conta;
+//int conta;
 
 //task 1 e 2
 void recursive(vector <vector<long long int>> &DP1,vector<int> &shares,vector<int> &history, int profit, int acoes,int day){
@@ -41,10 +41,9 @@ void recursive(vector <vector<long long int>> &DP1,vector<int> &shares,vector<in
     else if(day == d) return;
 
     //cout << day << " " << acoes << " " << profit << endl;
-    conta++;
+    //conta++;
     
 
-    
     history[day] = 0;
     recursive(DP1,shares,history,profit , acoes , day+1);
     if(acoes!=0){
@@ -65,12 +64,8 @@ void recursive2(vector <vector<long long int>> &DP1,vector<int> &shares, int pro
 
     //cout << profit << endl;
 
-    if(profit > DP1[day][acoes]){
+    if(profit >= DP1[day][acoes]){
         DP1[day][acoes] = profit;
-    }
-    else if(profit == DP1[day][acoes]){
-        possibilities ++;
-        return;
     }
     else{
         return;
@@ -93,7 +88,7 @@ void recursive2(vector <vector<long long int>> &DP1,vector<int> &shares, int pro
     else if(day == d) return;
 
     //cout << day << " " << acoes << " " << profit << endl;
-    conta++;
+    //conta++;
     
     //vender 
     for (int i = 0; i <= acoes; i++)
@@ -120,7 +115,7 @@ int main(){
 
     cin >> n >> d >> k >> r;
 
-    conta=0;
+    //conta=0;
     for (int i = 0; i < n; i++){
         vector<int> shares;
         
@@ -170,7 +165,7 @@ int main(){
     
 
     }
-    cout << "recursoes: " << conta << endl;
+    //cout << "recursoes: " << conta << endl;
 
     return 0;
 }
