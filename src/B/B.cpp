@@ -10,8 +10,26 @@ int n, d, k, r;
 vector<int> history2;
 //int conta;
 
-//task 1 e 2
-void recursive(vector <vector<long long int>> &DP1,vector<int> &shares,vector<int> &history, int profit, int acoes,int day){
+//task 1 
+int task1(vector<int> &shares){
+
+   vector <vector<long long int>> dp (d+1,vector<long long int>(2, -1));
+
+   dp[0][0]=0;
+   dp[0][1]= (-k * shares[0] - k*r);
+
+   for (int i = 1; i < d; i++)
+   {
+    dp[i][0] = max(dp[i-1][0], dp[i-1][1] + shares[i]*k);
+    dp[i][1] = max(dp[i-1][1], dp[i-1][0] - shares[i]*k - k*r);
+   }
+   
+   return dp[d-1][0];
+}
+
+
+//task 2
+void task2(vector <vector<long long int>> &DP1,vector<int> &shares,vector<int> &history, int profit, int acoes,int day){
 
     //cout << profit << endl;
 
@@ -34,7 +52,7 @@ void recursive(vector <vector<long long int>> &DP1,vector<int> &shares,vector<in
             possibilities = (possibilities+1) % mod;
             history2 = history;
         }
-
+    
 
         return;
     }
@@ -45,22 +63,23 @@ void recursive(vector <vector<long long int>> &DP1,vector<int> &shares,vector<in
     
 
     history[day] = 0;
-    recursive(DP1,shares,history,profit , acoes , day+1);
+    task2(DP1,shares,history,profit , acoes , day+1);
     if(acoes!=0){
         history[day] = -k;
-        recursive(DP1,shares,history,profit + k*shares[day]  , acoes - k, day+1);
+        task2(DP1,shares,history,profit + k*shares[day]  , acoes - k, day+1);
     }
     else{
         history[day] = k;
-        recursive(DP1,shares,history,profit - k*shares[day] - k*r ,acoes + k, day+1);
+        task2(DP1,shares,history,profit - k*shares[day] - k*r ,acoes + k, day+1);
     }
-
+    
 
     return;
 }
 
+
 //task 3
-void recursive2(vector <vector<long long int>> &DP1,vector<int> &shares, int profit, int acoes,int day){
+void task3(vector <vector<long long int>> &DP1,vector<int> &shares, int profit, int acoes,int day){
 
     //cout << profit << endl;
 
@@ -93,14 +112,14 @@ void recursive2(vector <vector<long long int>> &DP1,vector<int> &shares, int pro
     //vender 
     for (int i = 0; i <= acoes; i++)
     {
-        recursive2(DP1,shares,profit + i*shares[day]  , acoes - i, day+1);
+        task3(DP1,shares,profit + i*shares[day]  , acoes - i, day+1);
     }
     
     
     //comprar
     for (int i = 1; i <= k-acoes; i++)
     {
-        recursive2(DP1,shares,profit - i*shares[day] - i*r ,acoes + i, day+1);
+        task3(DP1,shares,profit - i*shares[day] - i*r ,acoes + i, day+1);
     }
     
     return;
@@ -130,17 +149,13 @@ int main(){
         possibilities=0;
         
 
-        vector <vector<long long int>> DP1 (d+1,vector<long long int>(k+1, -INT_MAX));
-
-     
         if(task==1){   
-            vector<int> history(d+1,0);
-            recursive(DP1,shares,history,0,0,0);
-            cout << bestprofit << endl;
+            cout << task1(shares) << endl;
         }
         else if (task==2){
+            vector <vector<long long int>> DP1 (d+1,vector<long long int>(k+1, -INT_MAX));
             vector<int> history(d+1,0);
-            recursive(DP1,shares,history,0,0,0);
+            task2(DP1,shares,history,0,0,0);
             cout << bestprofit << endl;
             for (int x=0; x < d ; x++)
             {
@@ -149,18 +164,20 @@ int main(){
             cout << endl;
         }
         else if(task==3){
-            recursive2(DP1,shares,0,0,0);
+            vector <vector<long long int>> DP1 (d+1,vector<long long int>(k+1, -INT_MAX));
+            task3(DP1,shares,0,0,0);
             cout << bestprofit << " " << possibilities << endl;
         }
 
 
-        for (int i = 0; i < d; i++)
-        {
-            for (int j = 0; j <k; j++)
-            {
-                DP1[i][j]=-INT_MAX;
-            }    
-        }
+        //for (int i = 1; i <= d; i++)
+        //{
+        //    for (int j = 0; j < k; j++)
+        //    {
+        //        cout << DP1[i][j] <<  " ";
+        //    }    
+        //    cout << endl;
+        //}
 
     
 
