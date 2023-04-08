@@ -30,59 +30,56 @@ lli task1(vector<int> &shares){
 
 
 //task 2
-void task2(vector <vector<long long int>> &DP1,vector<int> &shares,vector<int> &history, int profit, int acoes,int day){
+lli task2(vector<int> &shares){
+    vector <vector<lli>> dp (d+1,vector<lli>(2, -1));
+    vector<int> history(d+1,0);
 
-    //cout << profit << endl;
+    dp[0][0]=0;
+    dp[0][1]= (-k * shares[0] - k*r);
 
-    if(profit > DP1[day][acoes]){
-        DP1[day][acoes] = profit;
-    }
-    else{
-        return;
-    }
+    //int acoes = 0;
+    for (int i = 1; i < d; i++)
+    {
 
-    //cout << DP1[day][acoes] << endl;
+        dp[i][0] = max(dp[i-1][0], dp[i-1][1] + shares[i]*k);
+        dp[i][1] = max(dp[i-1][1], dp[i-1][0] - shares[i]*k - k*r);
+    } 
 
-    if(day == d && acoes==0){
-        if(profit > bestprofit){
-            bestprofit = profit;
-            possibilities=1;
-            history2 = history;
+    
+    int side=0;
+    for (int i = d-1; i >=0; i--)
+    {
+        if(i==0){
+            if(side){
+                history[i] = k;
+                side=0;
+            }
+            continue;
         }
-        else if(profit == bestprofit) {
-            possibilities = (possibilities+1) % mod;
-            history2 = history;
+        if (!side)
+        {
+            if(dp[i][0]!=dp[i-1][0]){
+                history[i] = -k;
+                side=1;
+            }
         }
-    
-
-        return;
-    }
-    else if(day == d) return;
-
-    //cout << day << " " << acoes << " " << profit << endl;
-    //conta++;
-    
-
-    history[day] = 0;
-    task2(DP1,shares,history,profit , acoes , day+1);
-    if(acoes!=0){
-        history[day] = -k;
-        task2(DP1,shares,history,profit + k*shares[day]  , acoes - k, day+1);
-    }
-    else{
-        history[day] = k;
-        task2(DP1,shares,history,profit - k*shares[day] - k*r ,acoes + k, day+1);
+        else{
+            if(dp[i][1]!=dp[i-1][1]){
+                history[i] = k;
+                side=0;
+            }
+        }
+        
     }
     
-
-    return;
+    history2 = history;
+    return dp[d-1][0];
+   
 }
 
 
 //task 3
-void task3(vector <vector<long long int>> &DP1,vector<int> &shares, int profit, int acoes,int day){
-
-    //cout << profit << endl;
+void task3(vector <vector<long long int>> &DP1,vector<int> &shares, lli profit, int acoes,int day){
 
     if(profit >= DP1[day][acoes]){
         DP1[day][acoes] = profit;
@@ -91,7 +88,6 @@ void task3(vector <vector<long long int>> &DP1,vector<int> &shares, int profit, 
         return;
     }
 
-    //cout << DP1[day][acoes] << endl;
 
     if(day == d && acoes==0){
         if(profit > bestprofit){
@@ -107,7 +103,6 @@ void task3(vector <vector<long long int>> &DP1,vector<int> &shares, int profit, 
     }
     else if(day == d) return;
 
-    //cout << day << " " << acoes << " " << profit << endl;
     //conta++;
     
     //vender 
@@ -150,14 +145,14 @@ int main(){
         possibilities=0;
         
 
+        
+
+     
         if(task==1){   
             cout << task1(shares) << endl;
         }
         else if (task==2){
-            vector <vector<long long int>> DP1 (d+1,vector<long long int>(k+1, -INT_MAX));
-            vector<int> history(d+1,0);
-            task2(DP1,shares,history,0,0,0);
-            cout << bestprofit << endl;
+            cout << task2(shares) << endl;
             for (int x=0; x < d ; x++)
             {
                 cout << history2[x] << " ";
@@ -169,19 +164,16 @@ int main(){
             task3(DP1,shares,0,0,0);
             cout << bestprofit << " " << possibilities << endl;
         }
-
-
-        //for (int i = 1; i <= d; i++)
-        //{
-        //    for (int j = 0; j < k; j++)
-        //    {
-        //        cout << DP1[i][j] <<  " ";
-        //    }    
-        //    cout << endl;
-        //}
-
-    
-
+        /*
+        for (int i = 1; i <= d; i++)
+        {
+            for (int j = 0; j < k; j++)
+            {
+                cout << DP1[i][j] <<  " ";
+            }    
+            cout << endl;
+        }
+        */
     }
     //cout << "recursoes: " << conta << endl;
 
