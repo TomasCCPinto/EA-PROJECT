@@ -4,16 +4,17 @@
 
 using namespace std;
 
+typedef long long int lli;
 const int mod = 1e9 +7;
-int task, bestprofit, possibilities;
+lli task, bestprofit, possibilities;
 int n, d, k, r;
 vector<int> history2;
 //int conta;
 
 //task 1 
-int task1(vector<int> &shares){
+lli task1(vector<int> &shares){
 
-   vector <vector<long long int>> dp (d+1,vector<long long int>(2, -1));
+   vector <vector<lli>> dp (d+1,vector<lli>(2, -1));
 
    dp[0][0]=0;
    dp[0][1]= (-k * shares[0] - k*r);
