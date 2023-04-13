@@ -6,10 +6,10 @@ using namespace std;
 
 typedef long long int lli;
 const int mod = 1e9 +7;
-lli task, bestprofit, possibilities;
+lli task, possibilities;
 int n, d, k, r;
 vector<int> history2;
-
+//int conta;
 
 //task 1 
 lli task1(vector<int> &shares){
@@ -37,7 +37,7 @@ lli task2(vector<int> &shares){
     dp[0][0]=0;
     dp[0][1]= (-k * shares[0] - k*r);
 
-  
+    //int acoes = 0;
     for (int i = 1; i < d; i++)
     {
 
@@ -71,7 +71,16 @@ lli task2(vector<int> &shares){
         }
         
     }
- 
+    
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            cout << dp[i][j] <<  " ";
+        }    
+        cout << endl;
+    }
+
     history2 = history;
     return dp[d-1][0];
    
@@ -91,13 +100,14 @@ lli task3(vector<int> &shares){
         paths[0][i]=1;
     }
     
+    
 
     for (int i = 1; i < d; i++){
 
         for (int j = 0; j <= k; j++)
         {
             lli maximo=-INT_MAX;
-        
+            //lli path=1;
             for(int z=0; z<=k; z++){
                  if(z==j){
                     if(maximo < dp[i-1][z]){
@@ -159,9 +169,8 @@ int main(){
             shares.push_back(s);
                    
         }
-        possibilities=0;
+        possibilities=1;
         
-     
         if(task==1){   
             cout << task1(shares) << endl;
         }
@@ -177,9 +186,18 @@ int main(){
             
             cout << task3(shares) << " " << possibilities << endl;
         }
-       
+        /*
+        for (int i = 1; i <= d; i++)
+        {
+            for (int j = 0; j < k; j++)
+            {
+                cout << DP1[i][j] <<  " ";
+            }    
+            cout << endl;
+        }
+        */
     }
-    
+    //cout << "recursoes: " << conta << endl;
 
     return 0;
 }
